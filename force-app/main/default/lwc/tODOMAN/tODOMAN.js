@@ -1,10 +1,9 @@
 import { LightningElement } from 'lwc';
 
-export default class TODOMANAGER extends LightningElement {
-    
+export default class tODOMAN extends LightningElement {
     today;
     incompletetask = [];
-
+    completetask = [];
     taskname = "";
     taskdate = null;
 
@@ -39,7 +38,6 @@ export default class TODOMANAGER extends LightningElement {
         if (!this.taskdate) {
             this.taskdate = this.today;
         }
-        console.log('test');
         if (this.validation()) {
             this.incompletetask = [
                 ...this.incompletetask,
@@ -47,38 +45,12 @@ export default class TODOMANAGER extends LightningElement {
             ];
             this.resetHandler();
             this.incompletetask = this.sortTasks(this.incompletetask);
-            console.log("this.incompletetask", this.incompletetask);
         }
     }
-
-    /*validation() {
-        let isValid = true;
-        const element = this.template.querySelector("lightning-input[name='taskname']");
-
-        if (!this.taskname) {
-            isValid = false;
-            element.setCustomValidity("Task name is required.");
-        } else {
-            const task = this.incompletetask.find(
-                (currItem) => currItem.taskname === this.taskname && currItem.taskdate === this.taskdate
-            );
-            if (task) {
-                isValid = false;
-                element.setCustomValidity("Task is already available.");
-            }
-        }
-
-        if (isValid) {
-            element.setCustomValidity("");
-        }
-        element.reportValidity();
-        return isValid;
-    }*/
     
         validation() {
             let isValid = true;
             const element = this.template.querySelector("lightning-input[data-id='xyz']");
-            console.log('element =>',element);
         
             if (!element) {
                 console.error("Task name input element not found");
@@ -86,22 +58,21 @@ export default class TODOMANAGER extends LightningElement {
             }
         
             const taskName = this.taskname;
-            const taskDate = this.taskdate;
             const incompleteTasks = this.incompletetask;
+            const completeTasks = this.completetask;
 
-            console.log('taskName =>',taskName);
-            console.log('taskDate =>',taskDate);
-            console.log('incompleteTasks =>',incompleteTasks);
-        
             if (!taskName) {
                 isValid = false;
                 element.setCustomValidity("Task name is required.");
             } else {
-                const duplicateTask = incompleteTasks.find(
-                    (task) => task.taskname == taskName && task.taskdate == taskDate
+                const duplicateTaskincomplete = incompleteTasks.find(
+                    (task) => task.taskname == taskName
                 );
+                const duplicateTaskComplete = completeTasks.find(
+                (task) => task.taskname === taskName
+            );
         
-                if (duplicateTask) {
+                if (duplicateTaskincomplete || duplicateTaskComplete) {
                     isValid = false;
                     element.setCustomValidity("Task is already available.");
                 } else {
@@ -121,4 +92,25 @@ export default class TODOMANAGER extends LightningElement {
             return dateA - dateB;
         });
     }
+
+
+
+    removalhandler(event){
+        let index = event.target.name;
+        this.incompletetask.splice(index,1);
+        let sortedarr = this.sortTasks(this.incompletetask);
+        this.incompletetask = [...sortedarr];
+        console.log('OUTPUT : ', incompletetask);
+    }
+
+
+
+    completehandler(event){
+        let index = event.target.name;
+        let removeditem = this.incompletetask.splice(index,1);
+        let sortedarr = this.sortTasks(this.incompletetask);
+        this.incompletetask  = [...sortedarr];
+        this.completetask = [...this.completetask, removeditem[0]];
+    }
+
 }

@@ -1,0 +1,115 @@
+<template>
+    <div class="slds-grid slds-gutters">
+        <div class="slds-col">
+            <lightning-card>
+                <div class="slds-text-heading_large slds-var-p-around_small slds-align_absolute-center">Add New Task</div>
+                <div class="slds-var-p-around_small">
+                    <lightning-input 
+                        label="Enter task" 
+                        placeholder="Enter Task Details" 
+                        data-id="xyz"
+                        value={taskname}
+                        name="taskname" 
+                        onchange={changeHandler}>
+                    </lightning-input>
+                </div>
+                <div class="slds-var-p-around_small">
+                    <lightning-input 
+                        type="date" 
+                        name="taskdate" 
+                        label="Set End Date" 
+                        value={taskdate} 
+                        field-level-help="default end date is today" 
+                        onchange={changeHandler}>
+                    </lightning-input>
+                </div>
+                <div class="slds-var-p-around_small" style="display: flex; justify-content: center">
+                    <lightning-button 
+                        variant="brand" 
+                        label="Reset" 
+                        title="Primary action" 
+                        onclick={resetHandler} 
+                        class="slds-var-m-left_x-small">
+                    </lightning-button>
+                    <lightning-button 
+                        variant="brand" 
+                        label="Add Task" 
+                        title="Primary action" 
+                        onclick={addTaskHandler} 
+                        class="slds-var-m-left_x-small">
+                    </lightning-button>
+                </div>
+            </lightning-card>
+        </div>
+
+
+        <div class="slds-col">
+            <lightning-card>
+                <div class="slds-text-heading_large slds-var-p-around_small slds-align_absolute-center">To Do Tasks
+                </div>
+                <div class="slds-var-p-around_small ">
+                    <template 
+                    for:each={incompletetask} 
+                    for:item="currtask"
+                    for:index="index">
+                        <div key={currtask.taskname} class="slds-theme_shade igbackground">
+                            <div class="slds-grid slds-wrap">
+                                <div class="slds-col slds-size_8-of-12">
+                                    <p>{currtask.taskname}</p>
+                                    <p><lightning-formatted-date-time value={currtask.taskdate} year="2-digit"
+                                            month="short" day="2-digit" weekday="long"></lightning-formatted-date-time>
+                                    </p>
+                                </div>
+                                <div class="slds-col slds-size_4-of-12 buttonback">
+                                    <lightning-button-icon 
+                                    icon-name="utility:delete" 
+                                    class="slds-m-left_xx-small" 
+                                    title="Delete" 
+                                    onclick={removalhandler} 
+                                    name = {index}></lightning-button-icon>
+                                        
+                                    <lightning-button-icon 
+                                    icon-name="utility:check" 
+                                    alternative-text="Add Task" 
+                                    class="slds-m-left_xx-small "
+                                    title="Add task" 
+                                    onclick={completehandler}
+                                    name = {index}></lightning-button-icon>
+                                </div>
+                            </div>
+
+                        </div>
+                    </template>
+                </div>
+            </lightning-card>
+        </div>
+
+        <div class="slds-col">
+            <lightning-card>
+                <div class="slds-text-heading_large slds-var-p-around_small slds-align_absolute-center">Completed Task
+                </div>
+                <div class="slds-var-p-around_small ">
+                    <template 
+                    for:each={completetask} 
+                    for:item="currtask1"
+                    for:index="index">
+                        <div key={currtask1.taskname} 
+                        class="slds-theme_shade igbackground1">
+                            <div class="slds-grid slds-wrap">
+                                <div class="slds-col slds-size_8-of-12">
+                                    <p>{currtask1.taskname}</p>
+                                    <p>
+                                        <lightning-formatted-date-time 
+                                        value={currtask1.taskdate} year="2-digit"
+                                        month="short" day="2-digit" weekday="long"></lightning-formatted-date-time>
+                                    </p>
+                                </div>
+                            </div>
+
+                        </div>
+                    </template>
+                </div>
+            </lightning-card>
+        </div>
+    </div>
+</template>
